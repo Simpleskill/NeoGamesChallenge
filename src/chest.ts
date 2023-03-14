@@ -9,8 +9,8 @@ export enum Values{
 const MAX_ROWS:number = 3;
 const MAX_COLS:number = 3;
 
-const EMPTY_CHEST_CHANCE:number = 50;
-const REWARD_CHEST_CHANCE:number = 40;
+const EMPTY_CHEST_CHANCE:number = 60;//50
+const REWARD_CHEST_CHANCE:number = 10;//40
 //const BONUS_CHEST_CHANCE:number = 5;
 
 export class Chest{

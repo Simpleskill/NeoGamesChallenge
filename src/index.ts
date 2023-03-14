@@ -145,7 +145,7 @@ rewardPanel.y = appHeight/2 -20;
 rewardPanel.width = appWidth*0.5;
 rewardPanel.height = appHeight*0.7;
 rewardPanel.alpha = 1;
-rewardPanel.zIndex = 1;
+rewardPanel.zIndex = 2;
 rewardPanel.visible = false;
 rewardPanel.interactive = true;
 
@@ -205,6 +205,36 @@ amountWonText.alpha = 1;
 amountWonText.visible = false;
 rewardPanel.addChild(amountWonText);
 
+// Bonus Logo
+const BonusLogoText: Texture = PIXI.Texture.from("bonus_image.png");
+
+const BonusLogo: Sprite = new PIXI.Sprite(BonusLogoText);
+BonusLogo.anchor.set(0.5);
+BonusLogo.x = appWidth/2;
+BonusLogo.y = appHeight/2;
+BonusLogo.width = appWidth*1;
+BonusLogo.height = appHeight*1.2;
+BonusLogo.alpha = 1;
+BonusLogo.zIndex = 3;
+BonusLogo.visible = false;
+
+app.stage.addChild(BonusLogo);
+
+// Lose Logo
+const LoseLogoText: Texture = PIXI.Texture.from("lose_image.png");
+
+const LoseLogo: Sprite = new PIXI.Sprite(LoseLogoText);
+LoseLogo.anchor.set(0.5);
+LoseLogo.x = appWidth/2;
+LoseLogo.y = appHeight/2;
+LoseLogo.width = appWidth*1;
+LoseLogo.height = appHeight*1.2;
+LoseLogo.alpha = 1;
+LoseLogo.zIndex = 3;
+LoseLogo.visible = false;
+
+app.stage.addChild(LoseLogo);
+
 /* ************ END REWARD PANEL ******************  */
 
 
@@ -223,13 +253,17 @@ sound.add('open_chest', 'sounds/open_chest.m4a');
 sound.speed('open_chest',0.9);
 sound.volume('open_chest',0.5);
 
+sound.add('empty_chest', 'sounds/lose_sound.wav');
+sound.speed('empty_chest',0.9);
+sound.volume('empty_chest',0.5);
+
 sound.add('reward_chest', 'sounds/reward_chest.wav');
 sound.speed('reward_chest',0.9);
 sound.volume('reward_chest',0.5);
 
 sound.add('bonus_chest', 'sounds/victory_sound.wav');
 sound.speed('bonus_chest',0.7);
-sound.volume('bonus_chest',0.5);
+sound.volume('bonus_chest',0.1);
 
 sound.add('coins', 'sounds/coins.wav');
 sound.speed('coins',0.8);
@@ -279,14 +313,26 @@ function CreateChests(){
 						sound.play('bonus_chest');
 						break;	
 				}
-
+				
 				new Tween(chest.sprite).to({ }, 100).repeat(6).start().onComplete(()=>{
 
 					if(chest.reward != Values.Empty){
+						if(chest.reward == Values.Bonus){
+
+							new Tween(BonusLogo.scale).from({x:0,y:0}).to({ x: 1,y: 0.8 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+								BonusLogo.visible = true; 
+							}).onComplete(()=>{
+								new Tween(BonusLogo.scale).from({x:1,y:0.8}).to({ x: 0,y: 0 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+									rewardPanelTween.start();
+								}).onComplete(()=>{
+									BonusLogo.visible = false;
+								});
+							})
+						}
 						rewardTypeText.visible = true;
 						rewardText.visible = true;
 						sound.play('coins');
-						new Tween(rewardPanel.scale).from({x:0,y:0}).to({ x: 0.5,y: 0.5 }, 1000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+						var rewardPanelTween = new Tween(rewardPanel.scale).from({x:0,y:0}).to({ x: 0.5,y: 0.5 }, 1000).easing(Easing.Quartic.InOut).onStart(()=>{
 							rewardPanel.visible = true; 
 						}).onRepeat(()=>{
 							sound.play('shakeChest');
@@ -318,12 +364,22 @@ function CreateChests(){
 							
 						});
 					}else{
-						new Tween(chest.sprite).to({ }, 100).repeat(5).start().onComplete(()=>{
-							if(CheckAllChestOpened())
-								ResetGame();
-							else
-								SetChestsInteractive(true);
-						});
+						new Tween(LoseLogo.scale).from({x:0,y:0}).to({ x: 0.7,y: 0.5 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+							LoseLogo.visible = true; 
+							sound.play("empty_chest");
+						}).onComplete(()=>{
+							new Tween(LoseLogo.scale).from({x:0.7,y:0.5}).to({ x: 0,y: 0 }, 2000).start().easing(Easing.Quartic.InOut)
+							.onStart(()=>{
+								sound.play("empty_chest");
+							})
+							.onComplete(()=>{
+								LoseLogo.visible = false;
+								if(CheckAllChestOpened())
+									ResetGame();
+								else
+									SetChestsInteractive(true);
+							});
+						})
 					}
 				});
 				
