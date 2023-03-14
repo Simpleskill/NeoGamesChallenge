@@ -1,8 +1,8 @@
-import { Application, Sprite, Texture, Ticker} from 'pixi.js'
+import { Application, Sprite, Texture, Ticker, Text} from 'pixi.js'
 import { sound } from '@pixi/sound';
 import * as PIXI from "pixi.js";
 import { Chest, Values } from "./chest";
-import { Tween , Group} from "tweedle.js";
+import { Tween , Group, Easing} from "tweedle.js";
 
 const appWidth : number = 1280;
 const appHeight : number = 720;
@@ -15,6 +15,7 @@ const app = new Application({
 	width: appWidth,
 	height: appHeight
 });
+app.stage.sortableChildren = true;
 
 /* ************ BACKGROUND ******************  */
 const backgroundText: Texture = PIXI.Texture.from("background_pirate_theme.png");
@@ -133,6 +134,80 @@ app.stage.addChild(playBtn);
 
 /* ************ END PLAY BTN ******************  */
 
+
+/* ************ REWARD PANEL ******************  */
+const rewardPanelText: Texture = PIXI.Texture.from("Panel 2.png");
+
+const rewardPanel: Sprite = new PIXI.Sprite(rewardPanelText);
+rewardPanel.anchor.set(0.5);
+rewardPanel.x = appWidth/2 +20;
+rewardPanel.y = appHeight/2 -20;
+rewardPanel.width = appWidth*0.5;
+rewardPanel.height = appHeight*0.7;
+rewardPanel.alpha = 1;
+rewardPanel.zIndex = 1;
+rewardPanel.visible = false;
+rewardPanel.interactive = true;
+
+rewardPanel.on("pointerdown", () => {
+	sound.stopAll();
+	HideRewardPanel();
+	if(CheckAllChestOpened())
+		ResetGame();
+	else
+		SetChestsInteractive(true);
+});
+
+app.stage.addChild(rewardPanel);
+
+// REWARD TEXT
+const rewardText = new Text('Congratulations!', {fontFamily: 'Impact,Charcoal,sans-serif',
+	fontSize: 90,
+	letterSpacing: 4,
+	fontWeight: "400",
+	fill: 0xfeeebc,
+	align: 'center',
+});
+rewardText.anchor.set(0.5);
+rewardText.x = 0;
+rewardText.y = -380;
+rewardText.alpha = 1;
+rewardText.visible = false;
+rewardPanel.addChild(rewardText);
+
+// BIT WIN MESSAGE
+const rewardTypeText = new Text('BIG WIN!', {fontFamily: 'Impact,Charcoal,sans-serif',
+	fontSize: 90,
+	letterSpacing: 4,
+	fontWeight: "400",
+	fill: 0x000000,
+	align: 'center',
+});
+rewardTypeText.anchor.set(0.5);
+rewardTypeText.x = 0;
+rewardTypeText.y = -200;
+rewardTypeText.alpha = 1;
+rewardTypeText.visible = false;
+rewardPanel.addChild(rewardTypeText);
+
+// AMOUNT WON
+const amountWonText = new Text('5.00€', {fontFamily: 'Impact,Charcoal,sans-serif',
+	fontSize: 180,
+	letterSpacing: 4,
+	fontWeight: "400",
+	fill: 0x000000,
+	align: 'center',
+});
+amountWonText.anchor.set(0.5);
+amountWonText.x = 0;
+amountWonText.y = 50;
+amountWonText.alpha = 1;
+amountWonText.visible = false;
+rewardPanel.addChild(amountWonText);
+
+/* ************ END REWARD PANEL ******************  */
+
+
 /* ************ CHESTS ******************  */
 
 const chestClosed: Texture = PIXI.Texture.from("closed_chest.png");
@@ -156,9 +231,13 @@ sound.add('bonus_chest', 'sounds/victory_sound.wav');
 sound.speed('bonus_chest',0.7);
 sound.volume('bonus_chest',0.5);
 
+sound.add('coins', 'sounds/coins.wav');
+sound.speed('coins',0.8);
+sound.volume('coins',1);
 
 var gameChests : Chest [] = []; 
 
+const moneyCounter = { val:0};
 CreateChests();
 
 Ticker.shared.add(update, this);
@@ -189,27 +268,84 @@ function CreateChests(){
 						break;
 					case Values.Reward:
 						chest.sprite.texture = chestBlueOpened;
+						rewardTypeText.text = "BIG WIN!";
 						sound.play('reward_chest');
+						sound.volume('coins',1);
 						break;
 					case Values.Bonus:
 						chest.sprite.texture = chestRedOpened;
-						//sound.play('bonus_chest');
+						rewardTypeText.text = "BOOOOOONUUUS WIN!";
+						sound.volume('coins',2);
 						sound.play('bonus_chest');
 						break;	
 				}
-				new Tween(chest.sprite).to({  }, 100).repeat(5).yoyo(true).start().onComplete(()=>{
 
-					if(CheckAllChestOpened())
-						ResetGame();
-					else
-						SetChestsInteractive(true);
+				new Tween(chest.sprite).to({ }, 100).repeat(6).start().onComplete(()=>{
+
+					if(chest.reward != Values.Empty){
+						rewardTypeText.visible = true;
+						rewardText.visible = true;
+						sound.play('coins');
+						new Tween(rewardPanel.scale).from({x:0,y:0}).to({ x: 0.5,y: 0.5 }, 1000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+							rewardPanel.visible = true; 
+						}).onRepeat(()=>{
+							sound.play('shakeChest');
+						}).onComplete(()=>{
+							new Tween(rewardPanel).to({ x: rewardPanel.x+5,y: rewardPanel.y+5  }, 500).repeat(4).yoyo(true).easing(Easing.Back.Out).start().onRepeat(()=>{
+								sound.play('coins');
+							});
+							amountWonText.visible = true;
+							console.log(chest.prize);
+							moneyCounter.val = 0;
+							var test = new Tween(moneyCounter).from(0).to({val:chest.prize}, 2000).easing(Easing.Exponential.Out).start().onUpdate(()=>{
+								if(!rewardPanel.visible){
+									HideRewardPanel();
+									test.stop();
+									return;
+								}
+								amountWonText.text = moneyCounter.val.toFixed(2)+" €";
+							}).onComplete(()=>{
+								sound.stop('coins');
+								new Tween(chest.sprite).to({ }, 100).repeat(15).start().onComplete(()=>{
+									HideRewardPanel();
+									sound.stopAll();
+									if(CheckAllChestOpened())
+										ResetGame();
+									else
+										SetChestsInteractive(true);
+								});
+							});
+							
+						});
+					}else{
+						new Tween(chest.sprite).to({ }, 100).repeat(5).start().onComplete(()=>{
+							if(CheckAllChestOpened())
+								ResetGame();
+							else
+								SetChestsInteractive(true);
+						});
+					}
 				});
+				
+
 
 				//chest.Debug();
 			});
 		});
 	});
 }
+
+function HideRewardPanel(){
+	if(!rewardPanel.visible)
+		return;
+	rewardPanel.visible = false;
+	rewardTypeText.visible = false;
+	rewardText.visible = false;
+	amountWonText.visible = false;
+	moneyCounter.val = 0;
+	amountWonText.text = "";
+}
+
 function ClearChests(){
 	
 	gameChests.forEach(chest => {
@@ -252,6 +388,9 @@ function CheckAllChestOpened():boolean{
 	});
 	return allOpened;
 }
+
+
+
 
 function ResetGame(){
 	new Tween(gameChests[1]).to({  }, 1500).repeat(1).start().onComplete(()=>{
