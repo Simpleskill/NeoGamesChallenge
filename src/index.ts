@@ -3,6 +3,7 @@ import { sound } from '@pixi/sound';
 import * as PIXI from "pixi.js";
 import { Chest, Values } from "./chest";
 import { Tween , Group, Easing} from "tweedle.js";
+import * as particles from '@pixi/particle-emitter';
 
 const appWidth : number = 1280;
 const appHeight : number = 720;
@@ -190,6 +191,10 @@ rewardTypeText.alpha = 1;
 rewardTypeText.visible = false;
 rewardPanel.addChild(rewardTypeText);
 
+
+// Coins Texture
+const CoinText: Texture = PIXI.Texture.from("Coin.png");
+
 // AMOUNT WON
 const amountWonText = new Text('5.00€', {fontFamily: 'Impact,Charcoal,sans-serif',
 	fontSize: 180,
@@ -236,6 +241,223 @@ LoseLogo.visible = false;
 app.stage.addChild(LoseLogo);
 
 /* ************ END REWARD PANEL ******************  */
+
+
+
+/* ************ PARTICLES ******************  */
+
+var rewardEmitter = new particles.Emitter(
+
+    // The PIXI.Container to put the emitter in
+    // if using blend modes, it's important to put this
+    // on top of a bitmap, and not use the root stage Container
+    rewardPanel,
+    // Emitter configuration, edit this to change the look
+    // of the emitter
+    {
+        lifetime: {
+            min: 0.5,
+            max: 0.6
+        },
+        frequency: 0.008,
+        spawnChance: 1,
+        particlesPerWave: 1,
+        emitterLifetime: 3,
+        maxParticles: 50,
+        pos: {
+            x: 0,
+            y: -100
+        },
+        addAtBack: false,
+        behaviors: [
+            {
+                type: 'alpha',
+                config: {
+                    alpha: {
+                        list: [
+                            {
+                                value: 0.7,
+                                time: 0
+                            },
+                            {
+                                value: 0.1,
+                                time: 1
+                            }
+                        ],
+                    },
+                }
+            },
+            {
+                type: 'scale',
+                config: {
+                    scale: {
+                        list: [
+                            {
+                                value: 0.4,
+                                time: 0
+                            },
+                            {
+                                value: 0.07,
+                                time: 1
+                            }
+                        ],
+                    },
+                }
+            },
+            {
+                type: 'moveSpeed',
+                config: {
+                    speed: {
+                        list: [
+                            {
+                                value: 90,
+                                time: 0
+                            },
+                            {
+                                value: 10,
+                                time: 1
+                            }
+                        ],
+                        isStepped: true
+                    },
+                }
+            },
+            {
+                type: 'rotationStatic',
+                config: {
+                    min: 0,
+                    max: 360
+                }
+            },
+            {
+                type: 'spawnShape',
+                config: {
+                    type: 'torus',
+                    data: {
+                        x: 0,
+                        y: 0,
+                        radius: 150
+                    }
+                }
+            },
+            {
+                type: 'textureSingle',
+                config: {
+                    texture: CoinText
+                }
+            }
+        ],
+    }
+);
+var bonusEmitter = new particles.Emitter(
+
+    // The PIXI.Container to put the emitter in
+    // if using blend modes, it's important to put this
+    // on top of a bitmap, and not use the root stage Container
+    rewardPanel,
+    // Emitter configuration, edit this to change the look
+    // of the emitter
+    {
+        lifetime: {
+            min: 0.5,
+            max: 1
+        },
+        frequency: 0.02,
+        spawnChance: 4,
+        particlesPerWave: 2,
+        emitterLifetime: 3,
+        maxParticles: 1000,
+        pos: {
+            x: 0,
+            y: 0
+        },
+        addAtBack: false,
+        behaviors: [
+            {
+                type: 'alpha',
+                config: {
+                    alpha: {
+                        list: [
+                            {
+                                value: 0.8,
+                                time: 0
+                            },
+                            {
+                                value: 0.1,
+                                time: 1
+                            }
+                        ],
+                    },
+                }
+            },
+            {
+                type: 'scale',
+                config: {
+                    scale: {
+                        list: [
+                            {
+                                value: 0.4,
+                                time: 0
+                            },
+                            {
+                                value: 0.07,
+                                time: 1
+                            }
+                        ],
+                    },
+                }
+            },
+            {
+                type: 'moveSpeed',
+                config: {
+                    speed: {
+                        list: [
+                            {
+                                value: 200,
+                                time: 0
+                            },
+                            {
+                                value: 10,
+                                time: 1
+                            }
+                        ],
+                        isStepped: true
+                    },
+                }
+            },
+            {
+                type: 'rotationStatic',
+                config: {
+                    min: 0,
+                    max: 360
+                }
+            },
+            {
+                type: 'spawnShape',
+                config: {
+                    type: 'rect',
+					data: {
+						x: -appWidth/2,
+						y: -appHeight/2,
+						w: appWidth,
+						h: appHeight
+					}
+                }
+            },
+            {
+                type: 'textureSingle',
+                config: {
+                    texture: CoinText
+                }
+            }
+        ],
+    }
+);
+
+
+/* ************ END PARTICLES ******************  */
+
+
 
 
 /* ************ CHESTS ******************  */
@@ -317,29 +539,23 @@ function CreateChests(){
 				new Tween(chest.sprite).to({ }, 100).repeat(6).start().onComplete(()=>{
 
 					if(chest.reward != Values.Empty){
-						if(chest.reward == Values.Bonus){
-
-							new Tween(BonusLogo.scale).from({x:0,y:0}).to({ x: 1,y: 0.8 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
-								BonusLogo.visible = true; 
-							}).onComplete(()=>{
-								new Tween(BonusLogo.scale).from({x:1,y:0.8}).to({ x: 0,y: 0 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
-									rewardPanelTween.start();
-								}).onComplete(()=>{
-									BonusLogo.visible = false;
-								});
-							})
-						}
-						rewardTypeText.visible = true;
-						rewardText.visible = true;
-						sound.play('coins');
 						var rewardPanelTween = new Tween(rewardPanel.scale).from({x:0,y:0}).to({ x: 0.5,y: 0.5 }, 1000).easing(Easing.Quartic.InOut).onStart(()=>{
+							rewardTypeText.visible = true;
+							rewardText.visible = true;
+							sound.play('coins');
+
 							rewardPanel.visible = true; 
+							if(chest.reward == Values.Bonus)
+								bonusEmitter.emit = true;
+							else
+								rewardEmitter.emit = true;
 						}).onRepeat(()=>{
 							sound.play('shakeChest');
 						}).onComplete(()=>{
 							new Tween(rewardPanel).to({ x: rewardPanel.x+5,y: rewardPanel.y+5  }, 500).repeat(4).yoyo(true).easing(Easing.Back.Out).start().onRepeat(()=>{
 								sound.play('coins');
 							});
+							
 							amountWonText.visible = true;
 							console.log(chest.prize);
 							moneyCounter.val = 0;
@@ -352,6 +568,8 @@ function CreateChests(){
 								amountWonText.text = moneyCounter.val.toFixed(2)+" €";
 							}).onComplete(()=>{
 								sound.stop('coins');
+								rewardEmitter.emit = false;
+								bonusEmitter.emit = false;
 								new Tween(chest.sprite).to({ }, 100).repeat(15).start().onComplete(()=>{
 									HideRewardPanel();
 									sound.stopAll();
@@ -363,6 +581,25 @@ function CreateChests(){
 							});
 							
 						});
+						
+						if(chest.reward == Values.Bonus){
+
+							new Tween(BonusLogo.scale).from({x:0,y:0}).to({ x: 1,y: 0.8 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+								BonusLogo.visible = true; 
+							}).onComplete(()=>{
+								new Tween(BonusLogo.scale).from({x:1,y:0.8}).to({ x: 0,y: 0 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+									rewardPanelTween.start();
+								}).onComplete(()=>{
+									BonusLogo.visible = false;
+								});
+							})
+						}else{
+							rewardPanelTween.start();
+						}
+						// rewardTypeText.visible = true;
+						// rewardText.visible = true;
+						//sound.play('coins');
+						
 					}else{
 						new Tween(LoseLogo.scale).from({x:0,y:0}).to({ x: 0.7,y: 0.5 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
 							LoseLogo.visible = true; 
@@ -400,6 +637,8 @@ function HideRewardPanel(){
 	amountWonText.visible = false;
 	moneyCounter.val = 0;
 	amountWonText.text = "";
+	bonusEmitter.emit = false;
+	rewardEmitter.emit = false;
 }
 
 function ClearChests(){
@@ -455,6 +694,18 @@ function ResetGame(){
 		SetPlayInteractive(true);
 	})
 }
+// Calculate the current time
+var elapsed = Date.now();
 function update(): void {
+	// Update the next frame
+	requestAnimationFrame(update);
+
+	var now = Date.now();
+
+	// The emitter requires the elapsed
+	// number of seconds since the last update
+	bonusEmitter.update((now - elapsed) * 0.001);
+	rewardEmitter.update((now - elapsed) * 0.001);
+	elapsed = now;
 	Group.shared.update()
 }
