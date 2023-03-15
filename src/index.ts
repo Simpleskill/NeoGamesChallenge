@@ -42,32 +42,11 @@ mainPanel.y = appHeight/2 -20;
 mainPanel.width = appWidth*0.75;
 mainPanel.height = appHeight*0.9;
 mainPanel.alpha = 0.7;
-
 app.stage.addChild(mainPanel);
-
 /* ************ END MAIN PANEL ******************  */
 
-
-/* ************ TITLE ******************  */
-
-// const titleText: Texture = PIXI.Texture.from("title.png");
-
-// const title: Sprite = new PIXI.Sprite(titleText);
-// title.anchor.set(0.5);
-// title.x = appWidth/2 ;
-// title.y = 110;
-// title.width = 480;
-// title.height = 230;
-// title.alpha = 1;
-
-// app.stage.addChild(title);
-
-/* ************ END TITLE ******************  */
-
 /* ************ LOGO IMAGE ******************  */
-
 const logoImageText: Texture = PIXI.Texture.from("pirate_hat.png");
-
 const logoImage: Sprite = new PIXI.Sprite(logoImageText); //340,220
 logoImage.anchor.set(0.5);
 logoImage.x = 115 ;
@@ -75,15 +54,11 @@ logoImage.y = 55;
 logoImage.width = 110;
 logoImage.height = 110;
 logoImage.alpha = 1;
-
 app.stage.addChild(logoImage);
-
 /* ************ END LOGO IMAGE ******************  */
 
 /* ************ LOGO ******************  */
-
 const logoText: Texture = PIXI.Texture.from("LogoDarky.png");
-
 const logo: Sprite = new PIXI.Sprite(logoText); //340,220
 logo.anchor.set(0.5);
 logo.x = 100 ;
@@ -91,18 +66,14 @@ logo.y = 125;
 logo.width = 170;
 logo.height = 110;
 logo.alpha = 1;
-
 app.stage.addChild(logo);
-
 /* ************ END LOGO ******************  */
 
 /* ************ PLAY BTN ******************  */
-
 const playBtnText: Texture = PIXI.Texture.from("Play.png");
 const playBtnHoverText: Texture = PIXI.Texture.from("Play_hover.png");
 const playBtnClickedText: Texture = PIXI.Texture.from("Play_clicked.png");
 const playBtnDisabledText: Texture = PIXI.Texture.from("Play_disabled.png");
-
 const playBtn: Sprite = new PIXI.Sprite(playBtnText); //340,220
 playBtn.anchor.set(0.5);
 playBtn.x = appWidth/2 ;
@@ -127,14 +98,8 @@ playBtn.on("pointerdown", () => {
 	SetPlayInteractive(false);
 	SetChestsInteractive(true);
 });
-// playBtn.on("pointerup", () => {
-// 	playBtn.texture = playBtnHoverText;
-// });
-
 app.stage.addChild(playBtn);
-
 /* ************ END PLAY BTN ******************  */
-
 
 /* ************ REWARD PANEL ******************  */
 const rewardPanelText: Texture = PIXI.Texture.from("Panel 2.png");
@@ -149,7 +114,6 @@ rewardPanel.alpha = 1;
 rewardPanel.zIndex = 2;
 rewardPanel.visible = false;
 rewardPanel.interactive = true;
-
 rewardPanel.on("pointerdown", () => {
 	sound.stopAll();
 	HideRewardPanel();
@@ -158,7 +122,6 @@ rewardPanel.on("pointerdown", () => {
 	else
 		SetChestsInteractive(true);
 });
-
 app.stage.addChild(rewardPanel);
 
 // REWARD TEXT
@@ -191,7 +154,6 @@ rewardTypeText.alpha = 1;
 rewardTypeText.visible = false;
 rewardPanel.addChild(rewardTypeText);
 
-
 // Coins Texture
 const CoinText: Texture = PIXI.Texture.from("Coin.png");
 
@@ -212,7 +174,6 @@ rewardPanel.addChild(amountWonText);
 
 // Bonus Logo
 const BonusLogoText: Texture = PIXI.Texture.from("bonus_image.png");
-
 const BonusLogo: Sprite = new PIXI.Sprite(BonusLogoText);
 BonusLogo.anchor.set(0.5);
 BonusLogo.x = appWidth/2;
@@ -222,12 +183,10 @@ BonusLogo.height = appHeight*1.2;
 BonusLogo.alpha = 1;
 BonusLogo.zIndex = 3;
 BonusLogo.visible = false;
-
 app.stage.addChild(BonusLogo);
 
 // Lose Logo
 const LoseLogoText: Texture = PIXI.Texture.from("lose_image.png");
-
 const LoseLogo: Sprite = new PIXI.Sprite(LoseLogoText);
 LoseLogo.anchor.set(0.5);
 LoseLogo.x = appWidth/2;
@@ -237,23 +196,12 @@ LoseLogo.height = appHeight*1.2;
 LoseLogo.alpha = 1;
 LoseLogo.zIndex = 3;
 LoseLogo.visible = false;
-
 app.stage.addChild(LoseLogo);
-
 /* ************ END REWARD PANEL ******************  */
 
-
-
 /* ************ PARTICLES ******************  */
-
 var rewardEmitter = new particles.Emitter(
-
-    // The PIXI.Container to put the emitter in
-    // if using blend modes, it's important to put this
-    // on top of a bitmap, and not use the root stage Container
     rewardPanel,
-    // Emitter configuration, edit this to change the look
-    // of the emitter
     {
         lifetime: {
             min: 0.5,
@@ -350,13 +298,7 @@ var rewardEmitter = new particles.Emitter(
     }
 );
 var bonusEmitter = new particles.Emitter(
-
-    // The PIXI.Container to put the emitter in
-    // if using blend modes, it's important to put this
-    // on top of a bitmap, and not use the root stage Container
     rewardPanel,
-    // Emitter configuration, edit this to change the look
-    // of the emitter
     {
         lifetime: {
             min: 0.5,
@@ -453,20 +395,16 @@ var bonusEmitter = new particles.Emitter(
         ],
     }
 );
-
-
 /* ************ END PARTICLES ******************  */
 
-
-
-
 /* ************ CHESTS ******************  */
-
+//Textures
 const chestClosed: Texture = PIXI.Texture.from("closed_chest.png");
 const chestOpened: Texture = PIXI.Texture.from("opened_chest.png");
 const chestBlueOpened: Texture = PIXI.Texture.from("opened_blue_chest.png");
 const chestRedOpened: Texture = PIXI.Texture.from("opened_red_chest.png");
 const chestClosedDisabled: Texture = PIXI.Texture.from("disabled_chest.png");
+//Sounds
 sound.add('shakeChest', 'sounds/shake.wav');
 sound.speed('shakeChest',0.9);
 sound.volume('shakeChest',0.2);
@@ -491,8 +429,8 @@ sound.add('coins', 'sounds/coins.wav');
 sound.speed('coins',0.8);
 sound.volume('coins',1);
 
+//First Chests Initialization
 var gameChests : Chest [] = []; 
-
 const moneyCounter = { val:0};
 CreateChests();
 
@@ -502,19 +440,18 @@ function CreateChests(){
 	for (let i = 0; i < 9; i++) {
 		var chest : Chest = new Chest(i,new PIXI.Sprite(chestClosed),appWidth,appHeight);
 		gameChests.push(chest);
-		//chest.Debug();
 		app.stage.addChild(chest.sprite);
 	}
 	SetChestsInteractive(false);
 	
 	gameChests.forEach(chest => {
 		chest.sprite.on("pointerdown", () => {
-
 			if(!chest.isClosed)
 				return;
 			SetChestsInteractive(false,chest);
 			chest.isClosed = false;
-			new Tween(chest.sprite).to({ x: chest.sprite.x+10,y: chest.sprite.y+5 }, 200).repeat(4).yoyo(true).start().onRepeat(()=>{
+			new Tween(chest.sprite).to({ x: chest.sprite.x+10,y: chest.sprite.y+5 }, 200).repeat(4).yoyo(true).start()
+			.onRepeat(()=>{
 				sound.play('shakeChest');
 			}).onComplete(()=>{
 				sound.play('open_chest');
@@ -531,14 +468,16 @@ function CreateChests(){
 					case Values.Bonus:
 						chest.sprite.texture = chestRedOpened;
 						rewardTypeText.text = "BOOOOOONUUUS WIN!";
-						sound.volume('coins',2);
 						sound.play('bonus_chest');
+						sound.volume('coins',2);
 						break;	
 				}
 				
-				new Tween(chest.sprite).to({ }, 100).repeat(6).start().onComplete(()=>{
-
+				new Tween(chest.sprite).to({ }, 100).repeat(6).start()
+				.onComplete(()=>{
 					if(chest.reward != Values.Empty){
+						rewardPanel.x = appWidth/2 +20;
+						rewardPanel.y = appHeight/2 -20;
 						var rewardPanelTween = new Tween(rewardPanel.scale).from({x:0,y:0}).to({ x: 0.5,y: 0.5 }, 1000).easing(Easing.Quartic.InOut).onStart(()=>{
 							rewardTypeText.visible = true;
 							rewardText.visible = true;
@@ -552,14 +491,14 @@ function CreateChests(){
 						}).onRepeat(()=>{
 							sound.play('shakeChest');
 						}).onComplete(()=>{
-							new Tween(rewardPanel).to({ x: rewardPanel.x+5,y: rewardPanel.y+5  }, 500).repeat(4).yoyo(true).easing(Easing.Back.Out).start().onRepeat(()=>{
+							new Tween(rewardPanel).to({ x: rewardPanel.x+5,y: rewardPanel.y+5  }, 500).repeat(4).yoyo(true).easing(Easing.Back.Out).start()
+							.onRepeat(()=>{
 								sound.play('coins');
 							});
-							
 							amountWonText.visible = true;
-							console.log(chest.prize);
 							moneyCounter.val = 0;
-							var test = new Tween(moneyCounter).from(0).to({val:chest.prize}, 2000).easing(Easing.Exponential.Out).start().onUpdate(()=>{
+							var test = new Tween(moneyCounter).from(0).to({val:chest.prize}, 2000).easing(Easing.Exponential.Out).start()
+							.onUpdate(()=>{
 								if(!rewardPanel.visible){
 									HideRewardPanel();
 									test.stop();
@@ -579,15 +518,15 @@ function CreateChests(){
 										SetChestsInteractive(true);
 								});
 							});
-							
 						});
 						
 						if(chest.reward == Values.Bonus){
-
-							new Tween(BonusLogo.scale).from({x:0,y:0}).to({ x: 1,y: 0.8 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+							new Tween(BonusLogo.scale).from({x:0,y:0}).to({ x: 1,y: 0.8 }, 2000).start().easing(Easing.Quartic.InOut)
+							.onStart(()=>{
 								BonusLogo.visible = true; 
 							}).onComplete(()=>{
-								new Tween(BonusLogo.scale).from({x:1,y:0.8}).to({ x: 0,y: 0 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+								new Tween(BonusLogo.scale).from({x:1,y:0.8}).to({ x: 0,y: 0 }, 2000).start().easing(Easing.Quartic.InOut)
+								.onStart(()=>{
 									rewardPanelTween.start();
 								}).onComplete(()=>{
 									BonusLogo.visible = false;
@@ -596,12 +535,9 @@ function CreateChests(){
 						}else{
 							rewardPanelTween.start();
 						}
-						// rewardTypeText.visible = true;
-						// rewardText.visible = true;
-						//sound.play('coins');
-						
 					}else{
-						new Tween(LoseLogo.scale).from({x:0,y:0}).to({ x: 0.7,y: 0.5 }, 2000).start().easing(Easing.Quartic.InOut).onStart(()=>{
+						new Tween(LoseLogo.scale).from({x:0,y:0}).to({ x: 0.7,y: 0.5 }, 2000).start().easing(Easing.Quartic.InOut)
+						.onStart(()=>{
 							LoseLogo.visible = true; 
 							sound.play("empty_chest");
 						}).onComplete(()=>{
@@ -619,10 +555,6 @@ function CreateChests(){
 						})
 					}
 				});
-				
-
-
-				//chest.Debug();
 			});
 		});
 	});
@@ -667,6 +599,7 @@ function SetChestsInteractive(isInteractive: boolean, curChest?:Chest){
 			chest.sprite.interactive = false;
 	});
 }
+
 function SetPlayInteractive(isInteractive: boolean){
 	playBtn.interactive = isInteractive;
 	if(isInteractive)
@@ -684,9 +617,6 @@ function CheckAllChestOpened():boolean{
 	return allOpened;
 }
 
-
-
-
 function ResetGame(){
 	new Tween(gameChests[1]).to({  }, 1500).repeat(1).start().onComplete(()=>{
 		ClearChests();
@@ -694,14 +624,13 @@ function ResetGame(){
 		SetPlayInteractive(true);
 	})
 }
+
 // Calculate the current time
 var elapsed = Date.now();
 function update(): void {
 	// Update the next frame
-	requestAnimationFrame(update);
-
+	//requestAnimationFrame(update);
 	var now = Date.now();
-
 	// The emitter requires the elapsed
 	// number of seconds since the last update
 	bonusEmitter.update((now - elapsed) * 0.001);
