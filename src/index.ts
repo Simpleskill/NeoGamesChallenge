@@ -33,7 +33,7 @@ app.stage.addChild(background);
 /* ************ END BACKGROUND ******************  */
 
 /* ************ MAIN PANEL ******************  */
-const MainPanelText: Texture = PIXI.Texture.from("Panel 2.png");
+const MainPanelText: Texture = PIXI.Texture.from("panel.png");
 
 const mainPanel: Sprite = new PIXI.Sprite(MainPanelText);
 mainPanel.anchor.set(0.5);
@@ -58,7 +58,7 @@ app.stage.addChild(logoImage);
 /* ************ END LOGO IMAGE ******************  */
 
 /* ************ LOGO ******************  */
-const logoText: Texture = PIXI.Texture.from("LogoDarky.png");
+const logoText: Texture = PIXI.Texture.from("logo.png");
 const logo: Sprite = new PIXI.Sprite(logoText); //340,220
 logo.anchor.set(0.5);
 logo.x = 100 ;
