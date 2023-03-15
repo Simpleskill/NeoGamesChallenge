@@ -1,6 +1,10 @@
 Linkdin https://www.linkedin.com/in/andrefcastro1
-Project in development Since 13/03/2023 - 20H
+
+Project developed from 13/03/2023 to 14/03/2023
+
 Platform any computer website with resolution of 1280x720p
+
+NeoGames - JS Games Developer exam 
 
 
 ***************************************************
@@ -26,6 +30,7 @@ When clicking on a chest:
 
 
 At the end of the chest animation:
+
     If it is a bonus win by the end of chest open animation, the player will be redirected to a new screen where a bonus animation and winning amount will be presented to the user and only by the end of the animation user will be returned back to main screen 
 
     If all chests opened present enable play button again.
