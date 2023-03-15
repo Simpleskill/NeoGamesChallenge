@@ -8,16 +8,28 @@ Platform any computer website with resolution of 1280x720p
 ***************************************************
 
 When pressing on the play button:
-    Play button becomes disabled. [DONE]
-    All chests become clickable. [DONE]
+
+    Play button becomes disabled.
+
+    All chests become clickable.
+
+
 When clicking on a chest:
-    All other elements in the game should become disabled. [DONE]
-    The game should randomly determine rather the chest is a winner.  [DONE]
-    If the chest is a winner, the game should randomly determine rather it is a regular win or bonus win. [DONE]
-    The Chest should open with the appropriate regular win /bonus/ loose animation.  [DONE]
+
+    All other elements in the game should become disabled.
+
+    The game should randomly determine rather the chest is a winner.
+
+    If the chest is a winner, the game should randomly determine rather it is a regular win or bonus win.
+
+    The Chest should open with the appropriate regular win /bonus/ loose animation.
+
+
 At the end of the chest animation:
-    If it is a bonus win by the end of chest open animation, the player will be redirected to a new screen where a bonus animation and winning amount will be presented to the user and only by the end of the animation user will be returned back to main screen [DONE]
-    If all chests opened present enable play button again. [DONE]
+    If it is a bonus win by the end of chest open animation, the player will be redirected to a new screen where a bonus animation and winning amount will be presented to the user and only by the end of the animation user will be returned back to main screen 
+
+    If all chests opened present enable play button again.
+
 
 
 ***************************************************
@@ -25,11 +37,16 @@ At the end of the chest animation:
 ***************************************************
 
 Chests chances:
+
     30% Empty
+
     60% Reward (Blue gems)
+
     10% Bonus    (Red gems)
 
+
 Game restarts:
+
     after 1,5 seconds
 
 Dependencies:
