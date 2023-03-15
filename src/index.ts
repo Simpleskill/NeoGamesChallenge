@@ -102,7 +102,7 @@ app.stage.addChild(playBtn);
 /* ************ END PLAY BTN ******************  */
 
 /* ************ REWARD PANEL ******************  */
-const rewardPanelText: Texture = PIXI.Texture.from("Panel 2.png");
+const rewardPanelText: Texture = PIXI.Texture.from("panel.png");
 
 const rewardPanel: Sprite = new PIXI.Sprite(rewardPanelText);
 rewardPanel.anchor.set(0.5);
